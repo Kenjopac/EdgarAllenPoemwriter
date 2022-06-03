@@ -6,10 +6,10 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
 import numpy as np
 from pathlib import Path
+import random
 
 
 def writesentence(seedtext, howmanywords, longestsequencelength, model, tokenizer):
-
     for _ in range(howmanywords):
         tokenlist = tokenizer.texts_to_sequences([seedtext])[0]
         tokenlist = pad_sequences([tokenlist], maxlen=longestsequencelength - 1, padding='pre')
@@ -26,9 +26,9 @@ def writesentence(seedtext, howmanywords, longestsequencelength, model, tokenize
 def formatinput(path):
     tokenizer = Tokenizer()
 
-    data = open(Path(path)).read()
+    data = open(Path(path), encoding="mbcs").read()
 
-    linesofpoe = data.lower().split("\n")
+    linesofpoe = data.lower().split("<split>")
     tokenizer.fit_on_texts(linesofpoe)
     totalwords = len(tokenizer.word_index) + 1
 
@@ -58,14 +58,12 @@ def retrainmodel(inputsequences, totalwords, longestsequencelength):
     model.add(Dense(totalwords, activation='softmax'))
     adam = Adam(lr=0.01)
     model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
-    history = model.fit(xs, ys, epochs=60, verbose=1)
+    history = model.fit(xs, ys, epochs=50, verbose=1)
     # make sure to change the name of the model you are saving each time
-    model.save('realtrainedmodel')
-
+    model.save('shakespearestrainedmodel')
 
 
 if __name__ == '__main__':
-    path = "C:\\Users\\kenneth\\PycharmProjects\\poemwriter\\poems"
+    path = 'C:\\Users\\kenneth\\PycharmProjects\\poemwriter\\shakespear sonnet'
     inputsequences, totalwords, longestsequencelength, tokenizer = formatinput(path)
-    newmodel = tf.keras.models.load_model('C:\\Users\\kenneth\\PycharmProjects\\poemwriter\\realtrainedmodel')
-    writesentence("hello world", 10, longestsequencelength, newmodel, tokenizer)
+    retrainmodel(inputsequences, totalwords, longestsequencelength)
