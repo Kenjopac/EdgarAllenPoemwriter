@@ -64,6 +64,7 @@ def retrainmodel(inputsequences, totalwords, longestsequencelength):
 
 
 if __name__ == '__main__':
-    path = 'C:\\Users\\kenneth\\PycharmProjects\\poemwriter\\shakespear sonnet'
+    path = 'C:\\Users\\pocke\\PycharmProjects\\EdgarAllenPoemwriter\\shakespear sonnet'
     inputsequences, totalwords, longestsequencelength, tokenizer = formatinput(path)
-    retrainmodel(inputsequences, totalwords, longestsequencelength)
+    model = tf.keras.models.load_model("C:\\Users\\pocke\\PycharmProjects\\EdgarAllenPoemwriter\\shakespearestrainedmodel")
+    writesentence("hello there", 50, longestsequencelength, model, tokenizer)
